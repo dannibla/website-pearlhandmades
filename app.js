@@ -26,5 +26,28 @@ route.get('/shop', function(req, res) {
     });
 });
 
+route.get('/contact', function(req, res) {
+    res.setHeader('Content-Type', 'text/html');
+    res.status(200).render('_layout.ejs', {
+        page: 'pages/_contact.ejs',
+        base: baseUrl
+    });
+});
+
+route.get('/login', function(req, res) {
+    res.setHeader('Content-Type', 'text/html');
+    res.status(200).render('_layout.ejs', {
+        page: 'pages/_login.ejs',
+        base: baseUrl
+    });
+});
+
+route.get('/register', function(req, res) {
+    res.setHeader('Content-Type', 'text/html');
+    res.status(200).render('_layout.ejs', {
+        page: 'pages/_register.ejs',
+        base: baseUrl
+    });
+});
 app.use(baseUrl, route);
 app.listen(process.env.PORT);
