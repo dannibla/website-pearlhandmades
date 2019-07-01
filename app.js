@@ -17,5 +17,14 @@ route.get('/', function(req, res) {
     });
 });
 
+
+route.get('/shop', function(req, res) {
+    res.setHeader('Content-Type', 'text/html');
+    res.status(200).render('_layout.ejs', {
+        page: 'pages/_shop.ejs',
+        base: baseUrl
+    });
+});
+
 app.use(baseUrl, route);
 app.listen(process.env.PORT);
