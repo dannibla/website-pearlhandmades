@@ -9,7 +9,7 @@ app.set('view engine', 'ejs');
 
 app.use(baseUrl, express.static(path.join(__dirname, 'public')));
 
-route.get('/', function(req, res) {
+route.get('/home', function(req, res) {
     res.setHeader('Content-Type', 'text/html');
     res.status(200).render('_layout.ejs', {
         page: 'pages/_home.ejs',
