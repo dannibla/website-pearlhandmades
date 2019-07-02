@@ -65,6 +65,11 @@ var User = sequelize.define('users', {
     }
 });
 
+
+sequelize.sync()
+    .then(() => console.log('Tables has been successfully created !'))
+    .catch(error => console.log('This error occured', error))
+    
 User.prototype.validPassword = function(password) {
     return bcrypt.compareSync(password, this.password)
 };
