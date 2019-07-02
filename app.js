@@ -173,7 +173,7 @@ route.post('/register',[
         }).then(user => {
             req.session.alert = [{ "msg": "Registered successfully." }]
             req.session.user = user.dataValues;
-            res.redirect(baseUrl);
+            res.redirect(baseUrl+'home');
         })
     }
 });
