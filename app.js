@@ -69,7 +69,7 @@ var User = sequelize.define('users', {
 sequelize.sync()
     .then(() => console.log('Tables has been successfully created !'))
     .catch(error => console.log('This error occured', error))
-    
+
 User.prototype.validPassword = function(password) {
     return bcrypt.compareSync(password, this.password)
 };
@@ -135,7 +135,32 @@ route.post('/login', function(req, res) {
         });
 });
 
-route.post('/register', function(req, res) {
+route.post('/register',[
+    check('username', 'Please enter valid username.')
+    .matches(/^[a-z0-9]+$/, "i")
+    .custom(value => {
+        return User.findOne({
+            where: { username: value }
+        }).then(user => {
+            if (user) {
+                return Promise.reject('Username already exist, try another.');
+            }
+        });
+    }),
+    check('email', 'Please enter valid email id.')
+    .isEmail()
+    .custom(value => {
+        return User.findOne({
+            where: { email: value }
+        }).then(user => {
+            if (user) {
+                return Promise.reject('E-mail already exist, try another.');
+            }
+        });
+    }),
+    check('password', 'Password must have atleast 6+ charaters.')
+    .isLength({ min: 6, max: 24 })
+], function(req, res) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         req.session.alert = errors.array();
