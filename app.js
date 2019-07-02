@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const { check, validationResult } = require('express-validator/check');
 const Sequelize = require('sequelize');
+const bcrypt = require('bcrypt');
 
 var sequelize = new Sequelize('postgres', 'postgres', 'postgres', {
     host: 'localhost',
