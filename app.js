@@ -67,6 +67,15 @@ var User = sequelize.define('users', {
 });
 
 
+var Feedback = sequelize.define('feedbacks', {
+    autoId: { type: Sequelize.UUID, defaultValue: Sequelize.UUIDV4, unique: true, allowNull: false, primaryKey: true },
+    name: { type: Sequelize.STRING, unique: true, allowNull: false },
+    email: { type: Sequelize.STRING, unique: true, allowNull: false },
+    subject: {type: Sequelize.STRING, unique: true, allowNull: false },
+    message: {type: Sequelize.STRING, unique: true, allowNull: false }
+});
+
+
 sequelize.sync()
     .then(() => console.log('Tables has been successfully created !'))
     .catch(error => console.log('This error occured', error))
@@ -75,11 +84,16 @@ User.prototype.validPassword = function(password) {
     return bcrypt.compareSync(password, this.password)
 };
 
+route.get('/', function(req, res) {
+    res.redirect(baseUrl+'home');
+});
+
 route.get('/home', function(req, res) {
     res.setHeader('Content-Type', 'text/html');
     res.status(200).render('_layout.ejs', {
         page: 'pages/_home.ejs',
         base: baseUrl,
+        user: req.session.user,
         alert: req.session.alert
     });
 });
@@ -90,6 +104,7 @@ route.get('/shop', function(req, res) {
     res.status(200).render('_layout.ejs', {
         page: 'pages/_shop.ejs',
         base: baseUrl,
+        user: req.session.user,
         alert: req.session.alert
     });
 });
@@ -99,6 +114,7 @@ route.get('/contact', function(req, res) {
     res.status(200).render('_layout.ejs', {
         page: 'pages/_contact.ejs',
         base: baseUrl,
+        user: req.session.user,
         alert: req.session.alert
     });
 });
@@ -108,6 +124,7 @@ route.get('/login', function(req, res) {
     res.status(200).render('_layout.ejs', {
         page: 'pages/_login.ejs',
         base: baseUrl,
+        user: req.session.user,
         alert: req.session.alert
     });
 });
@@ -117,6 +134,7 @@ route.get('/register', function(req, res) {
     res.status(200).render('_layout.ejs', {
         page: 'pages/_register.ejs',
         base: baseUrl,
+        user: req.session.user,
         alert: req.session.alert
     });
 });
@@ -134,6 +152,24 @@ route.post('/login', function(req, res) {
                 res.redirect(baseUrl);
             }
         });
+});
+
+route.post('/contact', function(req, res) {
+    if (req.body.name&&req.body.email&&req.body.subject&&req.body.message) {
+        Feedback.create({
+            name: req.body.name,
+            email: req.body.email,
+            subject: req.body.subject,
+            message: req.body.message
+        }).then(user => {
+            req.session.alert = [{ "msg": "Successfully recived your message, will contact you in short time." }]
+            res.redirect(baseUrl+'contact');
+        }).catch(error => {
+            res.redirect(baseUrl);
+        });
+    } else {
+        res.redirect(baseUrl);
+    }
 });
 
 route.post('/register',[
@@ -176,6 +212,15 @@ route.post('/register',[
             req.session.user = user.dataValues;
             res.redirect(baseUrl+'home');
         })
+    }
+});
+
+route.get('/logout', function(req, res) {
+    if (req.session.user && req.cookies.user_sid) {
+        res.clearCookie('user_sid');
+        res.redirect(baseUrl);
+    } else {
+        res.redirect(baseUrl + 'login');
     }
 });
 

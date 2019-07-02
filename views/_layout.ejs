@@ -32,11 +32,22 @@
               <li class="nav-item active"><a class="nav-link" href="home">Home</a></li>
               <li class="nav-item"><a href="shop" class="nav-link">Shop</a></li>
               <li class="nav-item"><a class="nav-link" href="contact">Contact</a></li>
-            </ul>
-            <ul class="nav-shop">
-              <li class="nav-item"><a class="nav-link" href="login">login</a></li>
-              <li class="nav-item"><a class="button button-header" href="register">Register</a></li>
-            </ul>
+			</ul>
+			<ul class="nav-shop">
+			<% if (user) { %>
+				<li class="nav-item submenu dropdown">
+					<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hi, <%=user.username%><br><%=user.email%></a>
+					<ul class="dropdown-menu">
+						<li class="nav-item"><a class="nav-link" href="cart">My Cart</a></li>
+						<li class="nav-item"><a class="nav-link" href="myorders">Track Order</a></li>
+						<li class="nav-item"><a class="nav-link" href="logout">Logout</a></li>
+					</ul>
+				</li>
+			<% } else { %>
+				<li class="nav-item"><a class="nav-link" href="login">login</a></li>
+				<li class="nav-item"><a class="button button-header" href="register">Register</a></li>
+			<% } %>
+			</ul>
           </div>
         </div>
       </nav>
